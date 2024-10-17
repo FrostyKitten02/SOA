@@ -9,8 +9,12 @@ public class AirConditioner extends Device implements ITimer {
     @Getter
     @Setter
     private float temperature = 22;
+    //ambient temperature sensor
+    @Getter
+    private float ambientTemperature = 22;
 
-    private final Timer timer = new Timer();
+    //timer sensor
+    private final TimerSensor timer = new TimerSensor();
 
     public void setTimer(long timeMins) {
         timer.setTimer(timeMins);

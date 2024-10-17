@@ -13,6 +13,7 @@ public interface ISmartHomeService {
     void setHeaterTemperature(float heaterTemperature);
     boolean isHeaterOn();
     Heater getHeater();
+    int getAmbientTemperatureFromHeater();
 
     //functions for ac
     void turnOffAc();
@@ -20,4 +21,5 @@ public interface ISmartHomeService {
     void setAcTemperature(float acTemperature);
     boolean isAcOn();
     AirConditioner getAirConditioner();
+    int getAmbientTemperatureFromAc();
 }

@@ -1,6 +1,6 @@
 package si.feri.mag.soa.model;
 
-public class Timer implements ITimer {
+public class TimerSensor implements ITimer {
     private long timerEnd = 0;
 
     public void setTimer(long timeMins) {
