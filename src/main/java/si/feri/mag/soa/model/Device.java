@@ -1,14 +1,14 @@
 package si.feri.mag.soa.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@SuperBuilder
-@RequiredArgsConstructor
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
 public abstract class Device implements IDevice {
     private final String name;
     private final String deviceNumber;
