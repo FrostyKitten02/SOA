@@ -4,11 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import si.feri.mag.soa.model.Device;
-import si.feri.mag.soa.model.sensors.IAmbientTemperatureSensor;
-import si.feri.mag.soa.model.sensors.ITimer;
+import si.feri.mag.soa.model.IAirConditioner;
+import si.feri.mag.soa.model.sensors.impl.TimerSensor;
 
 @SuperBuilder
-public class AirConditioner extends Device implements ITimer, IAmbientTemperatureSensor {
+public class AirConditioner extends Device implements IAirConditioner {
     @Getter
     @Setter
     private float temperature = 22;

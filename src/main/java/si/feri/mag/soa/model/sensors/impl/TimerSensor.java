@@ -1,4 +1,4 @@
-package si.feri.mag.soa.model.impl;
+package si.feri.mag.soa.model.sensors.impl;
 
 import si.feri.mag.soa.model.sensors.ITimer;
 
