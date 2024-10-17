@@ -30,12 +30,16 @@ public class SmartHomeImpl implements ISmartHomeService {
                 .deviceNumber("SAMSUNG-AC-1234")
                 .manufacturer("Samsung")
                 .status(Status.ON)
+                .temperature(22)
+                .ambientTemperature(22)
                 .build();
         heater = Heater.builder()
                 .name("Heat pump 1")
                 .deviceNumber("VERSI-X")
                 .manufacturer("VERSI")
                 .status(Status.ON)
+                .temperature(22)
+                .ambientTemperature(22)
                 .build();
         homeSecurity = HomeSecurity.builder()
                 .name("CNET Security Pro")

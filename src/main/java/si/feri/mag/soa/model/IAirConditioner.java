@@ -5,5 +5,5 @@ import si.feri.mag.soa.model.sensors.ITimer;
 
 public interface IAirConditioner extends ITimer, IAmbientTemperatureSensor, IDevice {
     void setTemperature(float temperature);
-    void getTemperature();
+    float getTemperature();
 }

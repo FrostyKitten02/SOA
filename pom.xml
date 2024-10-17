@@ -56,6 +56,52 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.2</version>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>jaxb2-maven-plugin</artifactId>-->
+<!--                <version>3.1.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>xjc</id>-->
+<!--                        <goals>-->
+<!--                            <goal>xjc</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                <configuration>-->
+<!--&lt;!&ndash;                    <xjbSources>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <xjbSource>src/main/resources/global.xjb</xjbSource>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </xjbSources>&ndash;&gt;-->
+<!--                    <sources>-->
+<!--                        <source>src/main/resources/xsd/service.xsd</source>-->
+<!--                    </sources>-->
+<!--                    <outputDirectory>${project.basedir}/src/main/java/client</outputDirectory>-->
+<!--                    <clearOutputDir>false</clearOutputDir>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+
+            <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <version>0.14.0</version>
+                <configuration>
+                    <forceRegenerate>true</forceRegenerate>
+                    <schemaLanguage>WSDL</schemaLanguage>
+                    <schemas>
+                        <schema>
+                            <url>http://localhost:8080/Smarthome?wsdl=1</url>
+                        </schema>
+                    </schemas>
+                    <verbose>true</verbose>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
