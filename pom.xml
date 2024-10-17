@@ -77,30 +77,6 @@
                     <verbose>true</verbose>
                 </configuration>
             </plugin>
-
-<!--            <plugin>-->
-<!--                <groupId>org.jvnet.jaxb2.maven2</groupId>-->
-<!--                <artifactId>maven-jaxb2-plugin</artifactId>-->
-<!--                <version>0.14.0</version>-->
-<!--                <configuration>-->
-<!--                    <forceRegenerate>true</forceRegenerate>-->
-<!--                    <schemaLanguage>WSDL</schemaLanguage>-->
-<!--                    <schemas>-->
-<!--                        <schema>-->
-<!--                            <url>http://localhost:8080/Smarthome?wsdl</url>-->
-<!--                        </schema>-->
-<!--                    </schemas>-->
-<!--                    <generatePackage>si.feri.mag.soa.client</generatePackage>-->
-<!--                    <verbose>true</verbose>-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <goals>-->
-<!--                            <goal>generate</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
         </plugins>
     </build>
 </project>
