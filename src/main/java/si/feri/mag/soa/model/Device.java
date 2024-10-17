@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import si.feri.mag.soa.model.sensors.IDevice;
 
 @Getter
 @Setter

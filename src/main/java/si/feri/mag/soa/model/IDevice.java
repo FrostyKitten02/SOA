@@ -1,4 +1,4 @@
-package si.feri.mag.soa.model.sensors;
+package si.feri.mag.soa.model;
 
 import si.feri.mag.soa.model.Status;
 
