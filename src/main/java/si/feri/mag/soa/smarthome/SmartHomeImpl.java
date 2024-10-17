@@ -9,14 +9,14 @@ import si.feri.mag.soa.model.impl.AirConditioner;
 import si.feri.mag.soa.model.impl.Heater;
 import si.feri.mag.soa.model.impl.HomeSecurity;
 import si.feri.mag.soa.smarthome.services.Device;
-import si.feri.mag.soa.smarthome.services.ISmartHomeService;
+import si.feri.mag.soa.smarthome.services.ISmartHome;
 
 import javax.jws.WebService;
 import java.util.Arrays;
 import java.util.List;
 
-@WebService(endpointInterface = "si.feri.mag.soa.smarthome.services.ISmartHomeService")
-public class SmartHomeImpl implements ISmartHomeService {
+@WebService(endpointInterface = "si.feri.mag.soa.smarthome.services.ISmartHome")
+public class SmartHomeImpl implements ISmartHome {
     private final IAirConditioner ac;
     private final IHeater heater;
     private final IHomeSecurity homeSecurity;
