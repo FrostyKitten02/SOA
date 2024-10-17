@@ -15,6 +15,7 @@ public abstract class Device implements IDevice {
     private final String manufacturer;
 
     @Getter
+    @Setter
     private Status status = Status.OFF;
 
     //power draw sensor

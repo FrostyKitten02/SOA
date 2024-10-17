@@ -32,6 +32,11 @@ public class HomeSecurity extends Device implements IHomeSecurity {
         this.alarmSetTime = System.currentTimeMillis();
     }
 
+    public void disableAlarm() {
+        this.alarmSet = false;
+        this.alarmSetTime = 0;
+    }
+
     public String getAlarmSetTime() {
         if (alarmSetTime == 0) {
             return "Alarm not set";

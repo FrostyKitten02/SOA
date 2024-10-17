@@ -13,5 +13,5 @@ public interface IHeaterService {
     @WebMethod
     boolean isHeaterOn();
     @WebMethod
-    int getAmbientTemperatureFromHeater();
+    float getAmbientTemperatureFromHeater();
 }

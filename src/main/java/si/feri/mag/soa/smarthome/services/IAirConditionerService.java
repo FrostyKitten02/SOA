@@ -13,7 +13,7 @@ public interface IAirConditionerService {
     @WebMethod
     boolean isAcOn();
     @WebMethod
-    int getAmbientTemperatureFromAc();
+    float getAmbientTemperatureFromAc();
     @WebMethod
     void setAcTimer(int timeMins);
     @WebMethod

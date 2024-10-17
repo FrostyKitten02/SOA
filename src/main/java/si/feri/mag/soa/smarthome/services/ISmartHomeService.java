@@ -8,4 +8,6 @@ import javax.jws.WebService;
 
 @WebService
 public interface ISmartHomeService extends IHeaterService, IAirConditionerService, ISecurityService {
+    float getTotalPowerDraw();
+    void setMaxPowerDraw(Device device, float maxPowerDraw);
 }

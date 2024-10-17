@@ -28,4 +28,6 @@ public interface ISecurityService {
     boolean isDoorClosed();
     @WebMethod
     boolean isDoorLocked();
+    @WebMethod
+    String getAlarmSetTime();
 }
