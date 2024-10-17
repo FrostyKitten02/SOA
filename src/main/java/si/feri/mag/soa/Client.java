@@ -9,5 +9,9 @@ public class Client {
         SmartHome c = service.getSmartHomeImplPort();
         String str = c.getAlarmSetTime();
         System.out.println(str);
+        c.setAcTemperature(10);
+        c.setAcTimer(10);
+        int timeleft = c.getTimeLeftOnAc();
+        System.out.println(timeleft);
     }
 }

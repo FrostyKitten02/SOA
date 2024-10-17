@@ -24,6 +24,6 @@ public class TimerSensor implements ITimer {
             return 0;
         }
 
-        return (int) (millisLEft / 1000);
+        return (int) (millisLEft / (1000 * 60));
     }
 }
