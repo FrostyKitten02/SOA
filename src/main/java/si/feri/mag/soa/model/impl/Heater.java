@@ -1,10 +1,13 @@
-package si.feri.mag.soa.model;
+package si.feri.mag.soa.model.impl;
 
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
+import si.feri.mag.soa.model.Device;
+import si.feri.mag.soa.model.sensors.IAmbientTemperatureSensor;
+import si.feri.mag.soa.model.sensors.ITimer;
 
 @SuperBuilder
-public class Heater extends Device {
+public class Heater extends Device implements ITimer, IAmbientTemperatureSensor {
     //ambient temperature sensor
     @Getter
     private float ambientTemperature = 22;

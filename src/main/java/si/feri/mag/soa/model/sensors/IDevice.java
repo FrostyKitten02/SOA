@@ -1,4 +1,4 @@
-package si.feri.mag.soa.smarthome;
+package si.feri.mag.soa.model.sensors;
 
 import si.feri.mag.soa.model.Status;
 

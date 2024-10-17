@@ -1,4 +1,6 @@
-package si.feri.mag.soa.model;
+package si.feri.mag.soa.model.impl;
+
+import si.feri.mag.soa.model.sensors.ITimer;
 
 public class TimerSensor implements ITimer {
     private long timerEnd = 0;

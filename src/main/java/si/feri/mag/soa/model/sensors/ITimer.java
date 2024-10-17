@@ -1,4 +1,4 @@
-package si.feri.mag.soa.model;
+package si.feri.mag.soa.model.sensors;
 
 public interface ITimer {
     void setTimer(long timeMins);

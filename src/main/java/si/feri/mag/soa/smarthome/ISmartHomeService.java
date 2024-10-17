@@ -1,7 +1,7 @@
 package si.feri.mag.soa.smarthome;
 
-import si.feri.mag.soa.model.AirConditioner;
-import si.feri.mag.soa.model.Heater;
+import si.feri.mag.soa.model.impl.AirConditioner;
+import si.feri.mag.soa.model.impl.Heater;
 
 import javax.jws.WebService;
 
