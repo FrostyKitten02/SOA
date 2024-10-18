@@ -1,7 +1,6 @@
 package si.feri.mag.soa;
 
 import lombok.Getter;
-import lombok.Setter;
 import wsimport.si.feri.mag.soa.client.DeviceType;
 import wsimport.si.feri.mag.soa.client.InfoOnly;
 import wsimport.si.feri.mag.soa.client.SmartHome;
