@@ -29,6 +29,8 @@ public class Client {
         System.out.println("Get command format: [get] [command] [device(optional)]");
         System.out.println("Set command format: [set] [command] [value] [device(optional)]");
         System.out.println("Use q command to quit");
+
+        SmartHome service = new SmartHomeImplService().getSmartHomeImplPort();
         while (true) {
             String commandInput = listenAndReadFromTerminal();
             if (commandInput.equalsIgnoreCase("q")) {
@@ -36,7 +38,6 @@ public class Client {
                 return;
             }
             Command command = parseInput(commandInput);
-            SmartHome service = new SmartHomeImplService().getSmartHomeImplPort();
 
             switch (command.getCommandStr().toLowerCase()) {
                 case "totalpower":
