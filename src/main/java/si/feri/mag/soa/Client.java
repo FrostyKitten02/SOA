@@ -161,7 +161,6 @@ public class Client {
 
 
     private static class Command {
-        @Setter
         private String command;
         @Getter
         private String[] commandWitArgs;
