@@ -7,6 +7,7 @@ import wsimport.si.feri.mag.soa.client.SmartHome;
 import wsimport.si.feri.mag.soa.client.SmartHomeImplService;
 import wsimport.si.feri.mag.soa.client.Status;
 
+import javax.xml.ws.BindingProvider;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,6 +32,7 @@ public class Client {
         System.out.println("Use q command to quit");
 
         SmartHome service = new SmartHomeImplService().getSmartHomeImplPort();
+        ((BindingProvider)service).getRequestContext().put(BindingProvider.SESSION_MAINTAIN_PROPERTY, true);
         while (true) {
             String commandInput = listenAndReadFromTerminal();
             if (commandInput.equalsIgnoreCase("q")) {

@@ -14,7 +14,9 @@ import si.feri.mag.soa.model.sensors.ITimer;
 import si.feri.mag.soa.smarthome.services.Device;
 import si.feri.mag.soa.smarthome.services.ISmartHome;
 
+import javax.annotation.Resource;
 import javax.jws.WebService;
+import javax.xml.ws.WebServiceContext;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,6 +27,9 @@ public class SmartHomeImpl implements ISmartHome {
     private final IHomeSecurity homeSecurity;
 
     private final List<IDevice> devices;
+
+    @Resource
+    private WebServiceContext context;
 
 
     public SmartHomeImpl() {
