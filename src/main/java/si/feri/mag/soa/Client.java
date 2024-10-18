@@ -27,7 +27,8 @@ public class Client {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Get command format: [get] [command] [device(optional)]");
-        System.out.println("Ser command format: [set] [command] [value] [device(optional)]");
+        System.out.println("Set command format: [set] [command] [value] [device(optional)]");
+        System.out.println("Use q command to quit");
         while (true) {
             String commandInput = listenAndReadFromTerminal();
             if (commandInput.equalsIgnoreCase("q")) {
