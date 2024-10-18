@@ -19,7 +19,6 @@ public class Client {
         return c;
     }
 
-
     private static String listenAndReadFromTerminal() throws IOException {
         System.out.println("Enter command:");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -27,134 +26,239 @@ public class Client {
     }
 
     public static void main(String[] args) throws IOException {
-        String commandInput = listenAndReadFromTerminal();
-        Command command = parseInput(commandInput);
+        System.out.println("Get command format: [get] [command] [device(optional)]");
+        System.out.println("Ser command format: [set] [command] [value] [device(optional)]");
+        while (true) {
+            String commandInput = listenAndReadFromTerminal();
+            if (commandInput.equalsIgnoreCase("q")) {
+                System.out.println("Exiting");
+                return;
+            }
+            Command command = parseInput(commandInput);
+            SmartHome service = new SmartHomeImplService().getSmartHomeImplPort();
 
-        SmartHome service = new SmartHomeImplService().getSmartHomeImplPort();
+            switch (command.getCommandStr().toLowerCase()) {
+                case "totalpower":
+                    if (command.getCommandType() == CommandType.GET) {
+                        float powerDraw = service.getTotalPowerDraw();
+                        System.out.println("Total power draw: " + powerDraw);
+                    } else if (command.getCommandType() == CommandType.SET) {
+                        Float powerDraw = null;
+                        try {
+                            powerDraw = Float.parseFloat(command.getCommandValue());
+                        } catch (Exception e) {
+                            System.out.println("Error parsing power draw" + command.getCommandValue());
+                            break;
+                        }
 
-        switch (command.getCommandStr().toLowerCase()) {
-            case "totalpower":
-                if (command.getCommandType() == CommandType.GET) {
-                    float powerDraw = service.getTotalPowerDraw();
-                    System.out.println("Total power draw: " + powerDraw);
-                } else if (command.getCommandType() == CommandType.SET) {
-                    service.setMaxPowerDraw(command.getDeviceType(), Float.parseFloat(command.getCommandValue()));
-                    System.out.println("Max power draw set");
-                }
-                break;
-            case "tempambient":
-                Float temp = null;
-                if (command.getDeviceType() == DeviceType.HEATER) {
-                    temp = service.getAmbientTemperatureFromHeater();
-                } else if (command.getDeviceType() == DeviceType.AIR_CONDITIONER) {
-                     temp = service.getAmbientTemperatureFromAc();
-                }
 
-                if (temp == null) {
-                    System.out.println("Error getting temperature, probably wrong device");
-                } else {
-                    System.out.println("Temperature: " + temp);
-                }
-                break;
-            case "alarm": //turn on/off alarm and get is alarm set
-                if (command.commandType == CommandType.GET) {
-                    boolean isAlarmSet = service.isAlarmSet();
-                    System.out.println("Is alarm set: " + isAlarmSet);
-                } else if (command.commandType == CommandType.SET) {
-                    Boolean alarmValue = command.getCommandValueAsBoolean();
-                    if (alarmValue == null) {
-                        System.out.println("Wrong value for alarm, should be on or off");
-                        break;
+                        try {
+                            service.setMaxPowerDraw(command.getDeviceType(), powerDraw);
+                            System.out.println("Max power draw set");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("Error making request");
+                        }
+                    }
+                    break;
+                case "tempambient":
+                    Float temp = null;
+                    if (command.getDeviceType() == DeviceType.HEATER) {
+                        try {
+                            temp = service.getAmbientTemperatureFromHeater();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("Error making request");
+                            break;
+                        }
+                    } else if (command.getDeviceType() == DeviceType.AIR_CONDITIONER) {
+                        try {
+                            temp = service.getAmbientTemperatureFromAc();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("Error making request");
+                            break;
+                        }
                     }
 
-                    if (alarmValue) {
-                        service.turnOnAlarm();
+                    if (temp == null) {
+                        System.out.println("Error getting temperature, probably wrong device");
                     } else {
-                        service.turnOffAlarm();
+                        System.out.println("Temperature: " + temp);
                     }
-                }
-                break;
-            case "alarmtriggered":
-                boolean triggered = service.isAlarmTriggered();
-                System.out.println("Is alarm triggered: " + triggered);
-                break;
-            case "doorclosed": //only get
-                boolean closed = service.isDoorClosed();
-                System.out.println("Is door closed: " + closed);
-                break;
-            case "doorlocked": //only get
-                boolean locked = service.isDoorLocked();
-                System.out.println("Is door locked: " + locked);
-                break;
-            case "alarmsettime": //only get
-                String alarmSetTime = service.getAlarmSetTime();
-                System.out.println("Alarm set time: " + alarmSetTime);
-                break;
-            case "status": //get and set
-                if (command.getCommandType() == CommandType.GET) {
-                    Status status = service.getStatus(command.getDeviceType());
-                    System.out.println("Status: " + status);
                     break;
-                }
+                case "alarm": //turn on/off alarm and get is alarm set
+                    if (command.commandType == CommandType.GET) {
+                        try {
+                            boolean isAlarmSet = service.isAlarmSet();
+                            System.out.println("Is alarm set: " + isAlarmSet);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("Error making request");
+                            break;
+                        }
+                    } else if (command.commandType == CommandType.SET) {
+                        Boolean alarmValue = command.getCommandValueAsBoolean();
+                        if (alarmValue == null) {
+                            System.out.println("Wrong value for alarm, should be on or off");
+                            break;
+                        }
 
-                if (command.getCommandType() == CommandType.SET) {
-                    Status status = Status.valueOf(command.getCommandValue().toUpperCase());
-                    service.setStatus(command.getDeviceType(), status);
-                    System.out.println("Status set");
+                        try {
+                            if (alarmValue) {
+                                service.turnOnAlarm();
+                                System.out.println("Alarm on");
+                            } else {
+                                service.turnOffAlarm();
+                                System.out.println("Alarm off");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("Error making request");
+                            break;
+                        }
+                    }
                     break;
-                }
-
-                break;
-            case "temperature": //get and set
-                if (command.getCommandType() == CommandType.GET) {
-                    float temperature = service.getTemperature(command.getDeviceType());
-                    System.out.println("Temperature: " + temperature);
-                    break;
-                }
-
-                if (command.getCommandType() == CommandType.SET) {
-                    Float temperature = null;
+                case "alarmtriggered":
                     try {
-                        temperature = Float.parseFloat(command.getCommandValue());
+                        boolean triggered = service.isAlarmTriggered();
+                        System.out.println("Is alarm triggered: " + triggered);
                     } catch (Exception e) {
-                        System.out.println("Error parsing temperature" + command.getCommandValue());
+                        e.printStackTrace();
+                        System.out.println("Error making request");
+                        break;
+                    }
+                    break;
+                case "doorclosed": //only get
+                    try {
+                        boolean closed = service.isDoorClosed();
+                        System.out.println("Is door closed: " + closed);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("Error making request");
+                        break;
+                    }
+                    break;
+                case "doorlocked": //only get
+                    try {
+                        boolean locked = service.isDoorLocked();
+                        System.out.println("Is door locked: " + locked);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("Error making request");
+                        break;
+                    }
+                    break;
+                case "alarmsettime": //only get
+                    try {
+                        String alarmSetTime = service.getAlarmSetTime();
+                        System.out.println("Alarm set time: " + alarmSetTime);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("Error making request");
+                        break;
+                    }
+                    break;
+                case "status": //get and set
+                    try {
+                        if (command.getCommandType() == CommandType.GET) {
+                            Status status = service.getStatus(command.getDeviceType());
+                            System.out.println("Status: " + status);
+                            break;
+                        }
+
+                        if (command.getCommandType() == CommandType.SET) {
+                            Status status = Status.valueOf(command.getCommandValue().toUpperCase());
+                            service.setStatus(command.getDeviceType(), status);
+                            System.out.println("Status set");
+                            break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("Error making request");
                         break;
                     }
 
-                    service.setTemperature(command.getDeviceType(), temperature);
-                    System.out.println("Temperature set");
                     break;
-                }
-                break;
-            case "timer": //get and set
-                if (command.commandType == CommandType.GET) {
-                    int timeLeft = service.getTimerLeft(command.getDeviceType());
-                    System.out.println("Time left: " + timeLeft);
-                    break;
-                }
-
-                if (command.commandType == CommandType.SET) {
-                    Integer val = null;
-                    try {
-                        val = Integer.parseInt(command.getCommandValue());
-                    } catch (Exception e) {
-                        System.out.println("Error parsing time" + command.getCommandValue());
+                case "temperature": //get and set
+                    if (command.getCommandType() == CommandType.GET) {
+                        try {
+                            float temperature = service.getTemperature(command.getDeviceType());
+                            System.out.println("Temperature: " + temperature);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("Error making request");
+                        }
                         break;
                     }
 
-                    service.setTimer(command.getDeviceType(), val);
-                    System.out.println("Timer set");
-                }
-                break;
-            case "info":
-                InfoOnly info = service.getInfo(command.getDeviceType());
-                System.out.println("Name: " + info.getName());
-                System.out.println("Manufacturer: " + info.getManufacturer());
-                System.out.println("Device number: " + info.getDeviceNumber());
-                System.out.println("Device status: " + info.getStatus());
-                break;
-            default:
-                System.out.println("Command not recognized");
+                    if (command.getCommandType() == CommandType.SET) {
+                        Float temperature = null;
+                        try {
+                            temperature = Float.parseFloat(command.getCommandValue());
+                        } catch (Exception e) {
+                            System.out.println("Error parsing temperature" + command.getCommandValue());
+                            break;
+                        }
+
+                        try {
+                            service.setTemperature(command.getDeviceType(), temperature);
+                            System.out.println("Temperature set");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("Error making request");
+                        }
+
+                        break;
+                    }
+                    break;
+                case "timer": //get and set
+                    if (command.commandType == CommandType.GET) {
+                        try {
+                            int timeLeft = service.getTimerLeft(command.getDeviceType());
+                            System.out.println("Time left: " + timeLeft);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("Error making request");
+                        }
+
+                        break;
+                    }
+
+                    if (command.commandType == CommandType.SET) {
+                        Integer val = null;
+                        try {
+                            val = Integer.parseInt(command.getCommandValue());
+                        } catch (Exception e) {
+                            System.out.println("Error parsing time" + command.getCommandValue());
+                            break;
+                        }
+
+                        try {
+                            service.setTimer(command.getDeviceType(), val);
+                            System.out.println("Timer set");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("Error making request");
+                        }
+                    }
+                    break;
+                case "info":
+                    try {
+                        InfoOnly info = service.getInfo(command.getDeviceType());
+                        System.out.println("Name: " + info.getName());
+                        System.out.println("Manufacturer: " + info.getManufacturer());
+                        System.out.println("Device number: " + info.getDeviceNumber());
+                        System.out.println("Device status: " + info.getStatus());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("Error making request");
+                        break;
+                    }
+                    break;
+                default:
+                    System.out.println("Command not recognized");
+            }
         }
     }
 
@@ -184,34 +288,56 @@ public class Client {
         public void setCommand(String command) {
             this.command = command;
             this.commandWitArgs = command.split(" ");
-            String deviceStr = commandWitArgs[0];
 
-            if (deviceStr.equalsIgnoreCase("ac")) {
-                this.deviceType = DeviceType.AIR_CONDITIONER;
-            } else if (deviceStr.equalsIgnoreCase("heater")) {
-                this.deviceType = DeviceType.HEATER;
-            } else if (deviceStr.equalsIgnoreCase("hs")) {
-                this.deviceType = DeviceType.HOME_SECURITY;
-            }
-
-            String commandTypeStr = commandWitArgs[1];//set, get
+            String commandTypeStr = commandWitArgs[0];//set, get
             if (commandTypeStr.equalsIgnoreCase("set")) {
                 commandType = CommandType.SET;
             } else if (commandTypeStr.equalsIgnoreCase("get")) {
                 commandType = CommandType.GET;
             }
 
-            String commandStr = commandWitArgs[2];//timer, temperature, status, doorclosed, doorlocked, alarmsettime
+            String commandStr = commandWitArgs[1];//timer, temperature, status, doorclosed, doorlocked, alarmsettime
             this.commandStr = commandStr;
 
-            if (this.commandType == CommandType.GET) {
-                //we don't need command value in this case
+            if (commandWitArgs.length < 3) {
+                this.deviceType = null;
+                this.commandValue = "";
                 return;
             }
 
-            String commandValue = commandWitArgs[3];
+            if (this.commandType == CommandType.GET) {
+                 String deviceStr = commandWitArgs[2];
+                 this.deviceType = parseDeviceStr(deviceStr);
+                 this.commandValue = "";
+                 return;
+            }
+
+            String commandValue = commandWitArgs[2];
             this.commandValue = commandValue;
+            if (commandWitArgs.length >= 4) {
+                String deviceStr = commandWitArgs[3];
+                this.deviceType = parseDeviceStr(deviceStr);
+            } else {
+                this.deviceType = null;
+            }
         }
+
+        private DeviceType parseDeviceStr(String deviceStr) {
+            if (deviceStr == null) {
+                return null;
+            }
+
+            if (deviceStr.equalsIgnoreCase("ac")) {
+                return DeviceType.AIR_CONDITIONER;
+            } else if (deviceStr.equalsIgnoreCase("heater")) {
+                return DeviceType.HEATER;
+            } else if (deviceStr.equalsIgnoreCase("hs")) {
+               return DeviceType.HOME_SECURITY;
+            }
+
+            return null;
+        }
+
     }
 
     private enum CommandType {
