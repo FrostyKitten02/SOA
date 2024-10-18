@@ -1,9 +1,11 @@
 package si.feri.mag.soa.smarthome.services;
 
 import si.feri.mag.soa.model.Status;
+import si.feri.mag.soa.model.impl.InfoOnly;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import java.util.Map;
 
 @WebService(name = "SmartHome")
 public interface ISmartHome {
@@ -40,15 +42,20 @@ public interface ISmartHome {
     @WebMethod
     String getAlarmSetTime();
 
-
+    @WebMethod
     void setStatus(Device device, Status status);
+    @WebMethod
     Status getStatus(Device device);
-
+    @WebMethod
     void setTemperature(Device device, float temperature);
+    @WebMethod
     float getTemperature(Device device);
 
-
+    @WebMethod
     void setTimer(Device device, int timeMins);
+    @WebMethod
     int getTimerLeft(Device device);
 
+    @WebMethod
+    InfoOnly getInfo(Device device);
 }

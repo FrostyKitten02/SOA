@@ -5,13 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import javax.xml.bind.annotation.XmlElement;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @SuperBuilder(toBuilder = true)
 public abstract class Device implements IDevice {
+    @XmlElement
     private final String name;
+    @XmlElement
     private final String deviceNumber;
+    @XmlElement
     private final String manufacturer;
 
     @Getter

@@ -9,6 +9,7 @@ import si.feri.mag.soa.model.Status;
 import si.feri.mag.soa.model.impl.AirConditioner;
 import si.feri.mag.soa.model.impl.Heater;
 import si.feri.mag.soa.model.impl.HomeSecurity;
+import si.feri.mag.soa.model.impl.InfoOnly;
 import si.feri.mag.soa.model.sensors.ITimer;
 import si.feri.mag.soa.smarthome.services.Device;
 import si.feri.mag.soa.smarthome.services.ISmartHome;
@@ -176,6 +177,16 @@ public class SmartHomeImpl implements ISmartHome {
         }
 
         return dev.getTimerRemaining();
+    }
+
+    @Override
+    public InfoOnly getInfo(Device device) {
+        IDevice dev = getDevice(device);
+        if (dev == null) {
+            return null;
+        }
+
+        return InfoOnly.fromDevice(dev);
     }
 
 

@@ -2,7 +2,8 @@ package si.feri.mag.soa;
 
 import lombok.Getter;
 import lombok.Setter;
-import wsimport.si.feri.mag.soa.client.Device;
+import wsimport.si.feri.mag.soa.client.DeviceType;
+import wsimport.si.feri.mag.soa.client.InfoOnly;
 import wsimport.si.feri.mag.soa.client.SmartHome;
 import wsimport.si.feri.mag.soa.client.SmartHomeImplService;
 import wsimport.si.feri.mag.soa.client.Status;
@@ -38,15 +39,15 @@ public class Client {
                     float powerDraw = service.getTotalPowerDraw();
                     System.out.println("Total power draw: " + powerDraw);
                 } else if (command.getCommandType() == CommandType.SET) {
-                    service.setMaxPowerDraw(command.getDevice(), Float.parseFloat(command.getCommandValue()));
+                    service.setMaxPowerDraw(command.getDeviceType(), Float.parseFloat(command.getCommandValue()));
                     System.out.println("Max power draw set");
                 }
                 break;
             case "tempambient":
                 Float temp = null;
-                if (command.getDevice() == Device.HEATER) {
+                if (command.getDeviceType() == DeviceType.HEATER) {
                     temp = service.getAmbientTemperatureFromHeater();
-                } else if (command.getDevice() == Device.AIR_CONDITIONER) {
+                } else if (command.getDeviceType() == DeviceType.AIR_CONDITIONER) {
                      temp = service.getAmbientTemperatureFromAc();
                 }
 
@@ -92,14 +93,14 @@ public class Client {
                 break;
             case "status": //get and set
                 if (command.getCommandType() == CommandType.GET) {
-                    Status status = service.getStatus(command.getDevice());
+                    Status status = service.getStatus(command.getDeviceType());
                     System.out.println("Status: " + status);
                     break;
                 }
 
                 if (command.getCommandType() == CommandType.SET) {
                     Status status = Status.valueOf(command.getCommandValue().toUpperCase());
-                    service.setStatus(command.getDevice(), status);
+                    service.setStatus(command.getDeviceType(), status);
                     System.out.println("Status set");
                     break;
                 }
@@ -107,7 +108,7 @@ public class Client {
                 break;
             case "temperature": //get and set
                 if (command.getCommandType() == CommandType.GET) {
-                    float temperature = service.getTemperature(command.getDevice());
+                    float temperature = service.getTemperature(command.getDeviceType());
                     System.out.println("Temperature: " + temperature);
                     break;
                 }
@@ -121,14 +122,14 @@ public class Client {
                         break;
                     }
 
-                    service.setTemperature(command.getDevice(), temperature);
+                    service.setTemperature(command.getDeviceType(), temperature);
                     System.out.println("Temperature set");
                     break;
                 }
                 break;
             case "timer": //get and set
                 if (command.commandType == CommandType.GET) {
-                    int timeLeft = service.getTimerLeft(command.getDevice());
+                    int timeLeft = service.getTimerLeft(command.getDeviceType());
                     System.out.println("Time left: " + timeLeft);
                     break;
                 }
@@ -142,9 +143,16 @@ public class Client {
                         break;
                     }
 
-                    service.setTimer(command.getDevice(), val);
+                    service.setTimer(command.getDeviceType(), val);
                     System.out.println("Timer set");
                 }
+                break;
+            case "info":
+                InfoOnly info = service.getInfo(command.getDeviceType());
+                System.out.println("Name: " + info.getName());
+                System.out.println("Manufacturer: " + info.getManufacturer());
+                System.out.println("Device number: " + info.getDeviceNumber());
+                System.out.println("Device status: " + info.getStatus());
                 break;
             default:
                 System.out.println("Command not recognized");
@@ -158,7 +166,7 @@ public class Client {
         @Getter
         private String[] commandWitArgs;
         @Getter
-        private Device device;
+        private DeviceType deviceType;
         @Getter
         private CommandType commandType;
         @Getter
@@ -181,11 +189,11 @@ public class Client {
             String deviceStr = commandWitArgs[0];
 
             if (deviceStr.equalsIgnoreCase("ac")) {
-                this.device = Device.AIR_CONDITIONER;
+                this.deviceType = DeviceType.AIR_CONDITIONER;
             } else if (deviceStr.equalsIgnoreCase("heater")) {
-                this.device = Device.HEATER;
+                this.deviceType = DeviceType.HEATER;
             } else if (deviceStr.equalsIgnoreCase("hs")) {
-                this.device = Device.HOME_SECURITY;
+                this.deviceType = DeviceType.HOME_SECURITY;
             }
 
             String commandTypeStr = commandWitArgs[1];//set, get
