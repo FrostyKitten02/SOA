@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import si.feri.mag.soa.model.Device;
 import si.feri.mag.soa.model.IHomeSecurity;
+import si.feri.mag.soa.model.Status;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,17 +27,19 @@ public class HomeSecurity extends Device implements IHomeSecurity {
 
     @Getter
     private boolean isDoorLocked = false;
-
+    @Override
     public void setAlarm() {
         this.alarmSet = true;
         this.alarmSetTime = System.currentTimeMillis();
     }
 
+    @Override
     public void disableAlarm() {
         this.alarmSet = false;
         this.alarmSetTime = 0;
     }
 
+    @Override
     public String getAlarmSetTime() {
         if (alarmSetTime == 0) {
             return "Alarm not set";
@@ -48,6 +51,14 @@ public class HomeSecurity extends Device implements IHomeSecurity {
         return df.format(date);
     }
 
+    @Override
+    public void setStatus(Status status) {
+        super.setStatus(status);
+        if (status == Status.ON) {
+            this.setAlarm();
+        }
 
+        this.disableAlarm();
+    }
 
 }

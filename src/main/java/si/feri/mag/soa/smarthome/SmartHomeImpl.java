@@ -4,10 +4,12 @@ import si.feri.mag.soa.model.IAirConditioner;
 import si.feri.mag.soa.model.IDevice;
 import si.feri.mag.soa.model.IHeater;
 import si.feri.mag.soa.model.IHomeSecurity;
+import si.feri.mag.soa.model.ITemperatureDevice;
 import si.feri.mag.soa.model.Status;
 import si.feri.mag.soa.model.impl.AirConditioner;
 import si.feri.mag.soa.model.impl.Heater;
 import si.feri.mag.soa.model.impl.HomeSecurity;
+import si.feri.mag.soa.model.sensors.ITimer;
 import si.feri.mag.soa.smarthome.services.Device;
 import si.feri.mag.soa.smarthome.services.ISmartHome;
 
@@ -52,63 +54,13 @@ public class SmartHomeImpl implements ISmartHome {
     }
 
     @Override
-    public void turnOffHeater() {
-        heater.turnOff();
-    }
-
-    @Override
-    public void turnOnHeater() {
-        heater.turnOn();
-    }
-
-    @Override
-    public void setHeaterTemperature(float heaterTemperature) {
-        heater.setTemperature(heaterTemperature);
-    }
-
-    @Override
-    public boolean isHeaterOn() {
-        return heater.getStatus() == Status.ON;
-    }
-
-    @Override
     public float getAmbientTemperatureFromHeater() {
         return heater.getAmbientTemperature();
     }
 
     @Override
-    public void turnOffAc() {
-        ac.setStatus(Status.OFF);
-    }
-
-    @Override
-    public void turnOnAc() {
-        ac.setStatus(Status.ON);
-    }
-
-    @Override
-    public void setAcTemperature(float acTemperature) {
-        ac.setTemperature(acTemperature);
-    }
-
-    @Override
-    public boolean isAcOn() {
-        return ac.getStatus() == Status.ON;
-    }
-
-    @Override
     public float getAmbientTemperatureFromAc() {
         return ac.getAmbientTemperature();
-    }
-
-    @Override
-    public void setAcTimer(int timeMins) {
-        ac.setTimer(timeMins);
-    }
-
-    @Override
-    public int getTimeLeftOnAc() {
-        return ac.getTimerRemaining();
     }
 
     @Override
@@ -129,18 +81,6 @@ public class SmartHomeImpl implements ISmartHome {
     @Override
     public boolean isAlarmTriggered() {
         return homeSecurity.isAlarmSet();
-    }
-
-    @Override
-    public void turnOffHomeSecurity() {
-        homeSecurity.disableAlarm();
-        homeSecurity.setStatus(Status.OFF);
-    }
-
-    @Override
-    public void turnOnHomeSecurity() {
-        homeSecurity.setStatus(Status.ON);
-        homeSecurity.setAlarm();
     }
 
     @Override
@@ -177,4 +117,102 @@ public class SmartHomeImpl implements ISmartHome {
                 break;
         }
     }
+
+    @Override
+    public void setStatus(Device device, Status status) {
+        IDevice dev = getDevice(device);
+        if (dev == null) {
+            return;
+        }
+
+        dev.setStatus(status);
+    }
+
+    @Override
+    public void setTemperature(Device device, float temperature) {
+        ITemperatureDevice dev = getTemperatureDevice(device);
+        if (dev == null) {
+            return;
+        }
+
+        dev.setTemperature(temperature);
+    }
+
+    @Override
+    public float getTemperature(Device device) {
+        ITemperatureDevice dev = getTemperatureDevice(device);
+        if (dev == null) {
+            return 0;
+        }
+
+        return dev.getTemperature();
+    }
+
+    @Override
+    public Status getStatus(Device device) {
+        IDevice dev = getDevice(device);
+        if (dev == null) {
+            return null;
+        }
+
+        return dev.getStatus();
+    }
+
+    @Override
+    public void setTimer(Device device, int timeMins) {
+        ITimer dev = getTimerDevice(device);
+        if (dev == null) {
+            return;
+        }
+
+        dev.setTimer(timeMins);
+    }
+
+    @Override
+    public int getTimerLeft(Device device) {
+        ITimer dev = getTimerDevice(device);
+        if (dev == null) {
+            return 0;
+        }
+
+        return dev.getTimerRemaining();
+    }
+
+
+    private IDevice getDevice(Device device) {
+        switch (device) {
+            case AIR_CONDITIONER:
+                return ac;
+            case HEATER:
+                return heater;
+            case HOME_SECURITY:
+                return homeSecurity;
+            default:
+                return null;
+        }
+    }
+
+    private ITemperatureDevice getTemperatureDevice(Device device) {
+        switch (device) {
+            case AIR_CONDITIONER:
+                return ac;
+            case HEATER:
+                return heater;
+            default:
+                return null;
+        }
+    }
+
+
+    private ITimer getTimerDevice(Device device) {
+        switch (device) {
+            case AIR_CONDITIONER:
+                return ac;
+            case HEATER:
+                return heater;
+            default:
+                return null;
+        }
+    }
+
 }
