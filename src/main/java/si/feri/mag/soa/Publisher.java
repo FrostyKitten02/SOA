@@ -7,7 +7,6 @@ import javax.xml.ws.Endpoint;
 public class Publisher {
     public static void main(String[] args) {
         try {
-            //TODO add my own implementation of a class
             Endpoint endpoint = Endpoint.publish("http://localhost:8080/Smarthome", new SmartHomeImpl());
             System.out.println("Storitev je objavljena");
             while (true) {

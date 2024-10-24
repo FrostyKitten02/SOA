@@ -15,12 +15,14 @@ import si.feri.mag.soa.smarthome.services.Device;
 import si.feri.mag.soa.smarthome.services.ISmartHome;
 
 import javax.annotation.Resource;
+import javax.jws.HandlerChain;
 import javax.jws.WebService;
 import javax.xml.ws.WebServiceContext;
 import java.util.Arrays;
 import java.util.List;
 
 @WebService(endpointInterface = "si.feri.mag.soa.smarthome.services.ISmartHome")
+@HandlerChain(file = "handlers.xml")
 public class SmartHomeImpl implements ISmartHome {
     private final IAirConditioner ac;
     private final IHeater heater;
@@ -28,8 +30,8 @@ public class SmartHomeImpl implements ISmartHome {
 
     private final List<IDevice> devices;
 
-    @Resource
-    private WebServiceContext context;
+    @Resource(name = "wsContext")
+    private WebServiceContext wsContext;
 
 
     public SmartHomeImpl() {
