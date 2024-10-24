@@ -11,6 +11,7 @@ import javax.xml.ws.BindingProvider;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collections;
 
 public class Client {
 
@@ -31,8 +32,12 @@ public class Client {
         System.out.println("Set command format: [set] [command] [value] [device(optional)]");
         System.out.println("Use q command to quit");
 
-        SmartHome service = new SmartHomeImplService().getSmartHomeImplPort();
-        ((BindingProvider)service).getRequestContext().put(BindingProvider.SESSION_MAINTAIN_PROPERTY, true);
+        SmartHomeImplService service = new SmartHomeImplService();
+        SmartHome port = service.getSmartHomeImplPort();
+
+        BindingProvider bindingProvider = (BindingProvider) port;
+        bindingProvider.getRequestContext().put(BindingProvider.SESSION_MAINTAIN_PROPERTY, true);
+
         while (true) {
             String commandInput = listenAndReadFromTerminal();
             if (commandInput.equalsIgnoreCase("q")) {
@@ -44,7 +49,7 @@ public class Client {
             switch (command.getCommandStr().toLowerCase()) {
                 case "totalpower":
                     if (command.getCommandType() == CommandType.GET) {
-                        float powerDraw = service.getTotalPowerDraw();
+                        float powerDraw = port.getTotalPowerDraw();
                         System.out.println("Total power draw: " + powerDraw);
                     } else if (command.getCommandType() == CommandType.SET) {
                         Float powerDraw = null;
@@ -57,7 +62,7 @@ public class Client {
 
 
                         try {
-                            service.setMaxPowerDraw(command.getDeviceType(), powerDraw);
+                            port.setMaxPowerDraw(command.getDeviceType(), powerDraw);
                             System.out.println("Max power draw set");
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -69,7 +74,7 @@ public class Client {
                     Float temp = null;
                     if (command.getDeviceType() == DeviceType.HEATER) {
                         try {
-                            temp = service.getAmbientTemperatureFromHeater();
+                            temp = port.getAmbientTemperatureFromHeater();
                         } catch (Exception e) {
                             e.printStackTrace();
                             System.out.println("Error making request");
@@ -77,7 +82,7 @@ public class Client {
                         }
                     } else if (command.getDeviceType() == DeviceType.AIR_CONDITIONER) {
                         try {
-                            temp = service.getAmbientTemperatureFromAc();
+                            temp = port.getAmbientTemperatureFromAc();
                         } catch (Exception e) {
                             e.printStackTrace();
                             System.out.println("Error making request");
@@ -94,7 +99,7 @@ public class Client {
                 case "alarm": //turn on/off alarm and get is alarm set
                     if (command.commandType == CommandType.GET) {
                         try {
-                            boolean isAlarmSet = service.isAlarmSet();
+                            boolean isAlarmSet = port.isAlarmSet();
                             System.out.println("Is alarm set: " + isAlarmSet);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -110,10 +115,10 @@ public class Client {
 
                         try {
                             if (alarmValue) {
-                                service.turnOnAlarm();
+                                port.turnOnAlarm();
                                 System.out.println("Alarm on");
                             } else {
-                                service.turnOffAlarm();
+                                port.turnOffAlarm();
                                 System.out.println("Alarm off");
                             }
                         } catch (Exception e) {
@@ -125,7 +130,7 @@ public class Client {
                     break;
                 case "alarmtriggered":
                     try {
-                        boolean triggered = service.isAlarmTriggered();
+                        boolean triggered = port.isAlarmTriggered();
                         System.out.println("Is alarm triggered: " + triggered);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -135,7 +140,7 @@ public class Client {
                     break;
                 case "doorclosed": //only get
                     try {
-                        boolean closed = service.isDoorClosed();
+                        boolean closed = port.isDoorClosed();
                         System.out.println("Is door closed: " + closed);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -145,7 +150,7 @@ public class Client {
                     break;
                 case "doorlocked": //only get
                     try {
-                        boolean locked = service.isDoorLocked();
+                        boolean locked = port.isDoorLocked();
                         System.out.println("Is door locked: " + locked);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -155,7 +160,7 @@ public class Client {
                     break;
                 case "alarmsettime": //only get
                     try {
-                        String alarmSetTime = service.getAlarmSetTime();
+                        String alarmSetTime = port.getAlarmSetTime();
                         System.out.println("Alarm set time: " + alarmSetTime);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -166,14 +171,14 @@ public class Client {
                 case "status": //get and set
                     try {
                         if (command.getCommandType() == CommandType.GET) {
-                            Status status = service.getStatus(command.getDeviceType());
+                            Status status = port.getStatus(command.getDeviceType());
                             System.out.println("Status: " + status);
                             break;
                         }
 
                         if (command.getCommandType() == CommandType.SET) {
                             Status status = Status.valueOf(command.getCommandValue().toUpperCase());
-                            service.setStatus(command.getDeviceType(), status);
+                            port.setStatus(command.getDeviceType(), status);
                             System.out.println("Status set");
                             break;
                         }
@@ -187,7 +192,7 @@ public class Client {
                 case "temperature": //get and set
                     if (command.getCommandType() == CommandType.GET) {
                         try {
-                            float temperature = service.getTemperature(command.getDeviceType());
+                            float temperature = port.getTemperature(command.getDeviceType());
                             System.out.println("Temperature: " + temperature);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -206,7 +211,7 @@ public class Client {
                         }
 
                         try {
-                            service.setTemperature(command.getDeviceType(), temperature);
+                            port.setTemperature(command.getDeviceType(), temperature);
                             System.out.println("Temperature set");
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -219,7 +224,7 @@ public class Client {
                 case "timer": //get and set
                     if (command.commandType == CommandType.GET) {
                         try {
-                            int timeLeft = service.getTimerLeft(command.getDeviceType());
+                            int timeLeft = port.getTimerLeft(command.getDeviceType());
                             System.out.println("Time left: " + timeLeft);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -239,7 +244,7 @@ public class Client {
                         }
 
                         try {
-                            service.setTimer(command.getDeviceType(), val);
+                            port.setTimer(command.getDeviceType(), val);
                             System.out.println("Timer set");
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -249,7 +254,7 @@ public class Client {
                     break;
                 case "info":
                     try {
-                        InfoOnly info = service.getInfo(command.getDeviceType());
+                        InfoOnly info = port.getInfo(command.getDeviceType());
                         System.out.println("Name: " + info.getName());
                         System.out.println("Manufacturer: " + info.getManufacturer());
                         System.out.println("Device number: " + info.getDeviceNumber());
